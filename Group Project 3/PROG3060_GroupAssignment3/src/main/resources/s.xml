@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 version="3.0">
+
+    <entity class="Model.CountriesEntity">
+        <table name="countries" schema="hr" catalog=""/>
+        <attributes>
+            <id name="countryId">
+                <column name="country_id" length="2"/>
+            </id>
+            <basic name="countryName">
+                <column name="country_name" nullable="false" length="40"/>
+            </basic>
+            <basic name="regionId">
+                <column name="region_id" precision="-1"/>
+            </basic>
+            <many-to-one name="regionsByRegionId" optional="true"
+                         target-entity="Model.RegionsEntity">
+                <join-column name="region_id" referenced-column-name="region_id"/>
+            </many-to-one>
+            <one-to-many name="locationsByCountryId" mapped-by="countriesByCountryId"
+                         target-entity="Model.LocationsEntity"/>
+        </attributes>
+    </entity>
+    <entity class="Model.DepartmentsEntity">
+        <table name="departments" schema="hr" catalog=""/>
+        <attributes>
+            <id name="departmentId">
+                <column name="department_id" precision="-1"/>
+            </id>
+            <basic name="departmentName">
+                <column name="department_name" length="30"/>
+            </basic>
+            <basic name="locationId">
+                <column name="location_id" nullable="false" precision="-1"/>
+            </basic>
+            <many-to-one name="locationsByLocationId" optional="true"
+                         target-entity="Model.LocationsEntity">
+                <join-column name="location_id" nullable="false" referenced-column-name="location_id"/>
+            </many-to-one>
+            <one-to-many name="employeesByDepartmentId" mapped-by="departmentsByDepartmentId"
+                         target-entity="Model.EmployeesEntity"/>
+            <one-to-many name="jobHistoriesByDepartmentId" mapped-by="departmentsByDepartmentId"
+                         target-entity="Model.JobHistoryEntity"/>
+        </attributes>
+    </entity>
+    <entity class="Model.DependentsEntity">
+        <table name="dependents" schema="hr" catalog=""/>
+        <attributes>
+            <id name="dependentId">
+                <column name="dependent_id" precision="-1"/>
+            </id>
+            <basic name="firstName">
+                <column name="first_name" length="50"/>
+            </basic>
+            <basic name="lastName">
+                <column name="last_name" length="50"/>
+            </basic>
+            <basic name="relationship">
+                <column name="relationship" length="25"/>
+            </basic>
+            <basic name="employeeId">
+                <column name="employee_id" precision="-1"/>
+            </basic>
+            <many-to-one name="employeesByEmployeeId" optional="true"
+                         target-entity="Model.EmployeesEntity">
+                <join-column name="employee_id" referenced-column-name="employee_id"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+    <entity class="Model.EmployeesEntity">
+        <table name="employees" schema="hr" catalog=""/>
+        <attributes>
+            <id name="employeeId">
+                <column name="employee_id" precision="-1"/>
+            </id>
+            <basic name="firstName">
+                <column name="first_name" nullable="false" length="20"/>
+            </basic>
+            <basic name="lastName">
+                <column name="last_name" length="25"/>
+            </basic>
+            <basic name="email">
+                <column name="email" length="100"/>
+            </basic>
+            <basic name="phoneNumber">
+                <column name="phone_number" nullable="false" length="20"/>
+            </basic>
+            <basic name="hireDate">
+                <column name="hire_date" precision="-1"/>
+            </basic>
+            <basic name="jobId">
+                <column name="job_id" precision="-1"/>
+            </basic>
+            <basic name="salary">
+                <column name="salary" precision="2"/>
+            </basic>
+            <basic name="commissionPct">
+                <column name="Commission_Pct" nullable="false" precision="-1"/>
+            </basic>
+            <basic name="managerId">
+                <column name="manager_id" nullable="false" precision="-1"/>
+            </basic>
+            <basic name="departmentId">
+                <column name="department_id" nullable="false" precision="-1"/>
+            </basic>
+            <many-to-one name="jobsByJobId" optional="true"
+                         target-entity="Model.JobsEntity">
+                <join-column name="job_id" referenced-column-name="job_id"/>
+            </many-to-one>
+            <many-to-one name="employeesByManagerId" optional="true"
+                         target-entity="Model.EmployeesEntity">
+                <join-column name="manager_id" nullable="false" referenced-column-name="employee_id"/>
+            </many-to-one>
+            <many-to-one name="departmentsByDepartmentId" optional="true"
+                         target-entity="Model.DepartmentsEntity">
+                <join-column name="department_id" nullable="false" referenced-column-name="department_id"/>
+            </many-to-one>
+            <one-to-many name="dependentsByEmployeeId" mapped-by="employeesByEmployeeId"
+                         target-entity="Model.DependentsEntity"/>
+            <one-to-many name="employeesByEmployeeId" mapped-by="employeesByManagerId"
+                         target-entity="Model.EmployeesEntity"/>
+        </attributes>
+    </entity>
+    <entity class="Model.JobHistoryEntity">
+        <table name="job_history" schema="hr" catalog=""/>
+        <id-class class="Model.JobHistoryEntityPK"/>
+        <attributes>
+            <id name="employeeId">
+                <column name="Employee_Id" precision="-1"/>
+            </id>
+            <id name="startDate">
+                <column name="Start_Date" precision="-1"/>
+            </id>
+            <basic name="endDate">
+                <column name="End_Date" nullable="false" precision="-1"/>
+            </basic>
+            <basic name="jobId">
+                <column name="Job_Id" nullable="false" precision="-1"/>
+            </basic>
+            <basic name="departmentId">
+                <column name="Department_Id" nullable="false" precision="-1"/>
+            </basic>
+            <many-to-one name="jobsByJobId" optional="true"
+                         target-entity="Model.JobsEntity">
+                <join-column name="Job_Id" nullable="false" referenced-column-name="job_id"/>
+            </many-to-one>
+            <many-to-one name="departmentsByDepartmentId" optional="true"
+                         target-entity="Model.DepartmentsEntity">
+                <join-column name="Department_Id" nullable="false" referenced-column-name="department_id"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+    <entity class="Model.JobsEntity">
+        <table name="jobs" schema="hr" catalog=""/>
+        <attributes>
+            <id name="jobId">
+                <column name="job_id" precision="-1"/>
+            </id>
+            <basic name="jobTitle">
+                <column name="job_title" length="35"/>
+            </basic>
+            <basic name="minSalary">
+                <column name="min_salary" nullable="false" precision="2"/>
+            </basic>
+            <basic name="maxSalary">
+                <column name="max_salary" nullable="false" precision="2"/>
+            </basic>
+            <one-to-many name="employeesByJobId" mapped-by="jobsByJobId"
+                         target-entity="Model.EmployeesEntity"/>
+            <one-to-many name="jobHistoriesByJobId" mapped-by="jobsByJobId"
+                         target-entity="Model.JobHistoryEntity"/>
+        </attributes>
+    </entity>
+    <entity class="Model.LocationsEntity">
+        <table name="locations" schema="hr" catalog=""/>
+        <attributes>
+            <id name="locationId">
+                <column name="location_id" precision="-1"/>
+            </id>
+            <basic name="streetAddress">
+                <column name="street_address" nullable="false" length="40"/>
+            </basic>
+            <basic name="postalCode">
+                <column name="postal_code" nullable="false" length="12"/>
+            </basic>
+            <basic name="city">
+                <column name="city" length="30"/>
+            </basic>
+            <basic name="stateProvince">
+                <column name="state_province" nullable="false" length="25"/>
+            </basic>
+            <basic name="countryId">
+                <column name="country_id" length="2"/>
+            </basic>
+            <many-to-one name="countriesByCountryId" optional="true"
+                         target-entity="Model.CountriesEntity">
+                <join-column name="country_id" referenced-column-name="country_id"/>
+            </many-to-one>
+            <one-to-many name="departmentsByLocationId" mapped-by="locationsByLocationId"
+                         target-entity="Model.DepartmentsEntity"/>
+        </attributes>
+    </entity>
+    <entity class="Model.RegionsEntity">
+        <table name="regions" schema="hr" catalog=""/>
+        <attributes>
+            <id name="regionId">
+                <column name="region_id" precision="-1"/>
+            </id>
+            <basic name="regionName">
+                <column name="region_name" nullable="false" length="25"/>
+            </basic>
+            <one-to-many name="countriesByRegionId" mapped-by="regionsByRegionId"
+                         target-entity="Model.CountriesEntity"/>
+        </attributes>
+    </entity>
+</entity-mappings>
